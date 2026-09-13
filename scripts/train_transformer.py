@@ -41,13 +41,10 @@ def main(train_path, test_path, out_dir, model_name):
         learning_rate=2e-5,
         per_device_train_batch_size=32,
         per_device_eval_batch_size=64,
-        num_train_epochs=3,
+        num_train_epochs=1,
         weight_decay=.01,
         eval_strategy="epoch",
-        save_strategy="epoch",
-        load_best_model_at_end=True,
-        metric_for_best_model="macro_f1",
-        greater_is_better=True,
+        save_strategy="no",
         report_to="none",
         seed=42,
     )
@@ -61,6 +58,8 @@ def main(train_path, test_path, out_dir, model_name):
     test_route = evaluate_routing(s.test.label.to_numpy(), tp, cls, route.threshold)
     result = {
         "model": model_name,
+        "fine_tuning_epochs": 1,
+        "train_n": len(s.train), "valid_n": len(s.valid), "test_n": len(s.test),
         "validation": classification_metrics(s.valid.label, vpred),
         "test": classification_metrics(s.test.label, tpred),
         "validation_ece": expected_calibration_error(s.valid.label.to_numpy(), vp, cls),
