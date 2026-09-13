@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+artifacts/
+results/*.joblib
+results/*.keras
+results/trainer/
+results/transformer_model/
+data/
