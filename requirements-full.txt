@@ -1,0 +1,6 @@
+-r requirements-base.txt
+tensorflow>=2.16
+torch>=2.2
+transformers>=4.45
+datasets>=3.0
+accelerate>=1.0
