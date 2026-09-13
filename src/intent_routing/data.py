@@ -12,15 +12,21 @@ class DataSplits:
     test: pd.DataFrame
 
 
+def _read_banking77(path: str | Path) -> pd.DataFrame:
+    df = pd.read_csv(path)
+    expected = {"text", "category"}
+    if set(df.columns) != expected:
+        raise ValueError(f"Expected BANKING77 columns {sorted(expected)}, got {list(df.columns)}")
+    df = df.rename(columns={"category": "label"})[["text", "label"]]
+    if df.isna().any().any():
+        raise ValueError(f"{path} contains missing values")
+    if not df["text"].map(lambda x: isinstance(x, str) and len(x.strip()) > 0).all():
+        raise ValueError(f"{path} contains empty text")
+    return df
+
+
 def load_banking77_csv(train_path: str | Path, test_path: str | Path) -> tuple[pd.DataFrame, pd.DataFrame]:
-    train = pd.read_csv(train_path, header=None, names=["text", "label"])
-    test = pd.read_csv(test_path, header=None, names=["text", "label"])
-    for name, df in {"train": train, "test": test}.items():
-        if df.isna().any().any():
-            raise ValueError(f"{name} contains missing values")
-        if not df["text"].map(lambda x: isinstance(x, str) and len(x.strip()) > 0).all():
-            raise ValueError(f"{name} contains empty text")
-    return train, test
+    return _read_banking77(train_path), _read_banking77(test_path)
 
 
 def make_train_valid(train: pd.DataFrame, valid_size: float = 0.15, seed: int = 42) -> tuple[pd.DataFrame, pd.DataFrame]:
