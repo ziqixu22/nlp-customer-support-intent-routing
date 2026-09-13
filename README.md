@@ -70,7 +70,7 @@ configs/
 
 ## Reproducibility
 
-`ci.yml` runs lightweight unit tests on every push/PR. `full-analysis.yml` installs TensorFlow and Transformers and trains all three model families before producing verified artifacts and `RESULTS.md`.
+`ci.yml` runs lightweight unit tests on every push/PR. `full-analysis.yml` installs TensorFlow and Transformers and trains all three model families before producing verified artifacts and `RESULTS.md`. The Transformer benchmark uses the full official training split with a one-epoch fine-tuning run so the workflow remains reproducible on a CPU GitHub runner.
 
 ## Resume intent
 
