@@ -1,0 +1,28 @@
+name: full-run-once
+on:
+  push:
+    paths:
+      - '.full-run-once'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements-full.txt
+      - run: python scripts/download_data.py
+      - run: PYTHONPATH=src python scripts/run_baseline.py --train data/train.csv --test data/test.csv --out results
+      - run: PYTHONPATH=src python scripts/train_tensorflow.py --train data/train.csv --test data/test.csv --out results
+      - run: PYTHONPATH=src python scripts/train_transformer.py --train data/train.csv --test data/test.csv --out results
+      - run: python scripts/build_results.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nlp-intent-routing-results
+          path: |
+            RESULTS.md
+            results/*.json
+            results/*.csv
