@@ -1,0 +1,17 @@
+data:
+  dataset: PolyAI/BANKING77
+  validation_fraction: 0.15
+  seed: 42
+baseline:
+  vectorizer: TF-IDF unigrams+bigrams
+  model: LogisticRegression
+routing:
+  target_auto_accuracy: 0.90
+tensorflow:
+  model: BiLSTM
+  max_tokens: 20000
+  sequence_length: 64
+transformer:
+  model_name: distilbert-base-uncased
+  max_length: 64
+  epochs: 3
